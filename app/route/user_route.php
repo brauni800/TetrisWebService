@@ -1,11 +1,11 @@
 <?php
 
-use App\Login\LoginModel;
+use App\User\UserModel;
 
 $app->group('/user/', function () {
 
     $this->post('login', function ($req, $res, $args) {
-        $um = new LoginModel();
+        $um = new UserModel();
         
         return $res
            ->withHeader('Content-type', 'application/json')
@@ -20,7 +20,7 @@ $app->group('/user/', function () {
     });
 
     $this->post('signup', function($req, $res, $args) {
-        $um = new LoginModel();
+        $um = new UserModel();
 
         return $res
         ->withHeader('Content-type', 'application/json')

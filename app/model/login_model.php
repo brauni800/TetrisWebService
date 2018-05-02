@@ -1,17 +1,15 @@
 <?php
-namespace App\Login;
+namespace App\User;
 
 use App\Lib\Database;
 use App\Lib\Response;
 
-class LoginModel
-{
+class UserModel {
     private $db;
     private $table = 'user';
     private $response;
     
-    public function __CONSTRUCT()
-    {
+    public function __CONSTRUCT() {
         $this->db = Database::StartUp();
         $this->response = new Response();
     }
@@ -51,7 +49,7 @@ class LoginModel
 
     public function Signup($data) {
         try {
-            if (isset($data['username']) && isset($data["password"])) {
+            if (isset($data['username'])) {
                 $sql = "SELECT username FROM $this->table WHERE username = ?";
                 $sth = $this->db->prepare($sql);
                 $sth->execute(
@@ -63,15 +61,19 @@ class LoginModel
                 $decode = json_decode($encode, true);
 
                 if (!$decode) {
-                    $sql = "INSERT INTO $this->table (username, password) VALUES (?, ?)";
-                    $sth = $this->db->prepare($sql);
-                    $sth->execute(
-                        array(
-                            $data['username'],
-                            $data['password']
-                        )
-                    );
-                    $this->response->setResponse(true, "Successful registration");
+                    if (isset($data["password"]) && $data["password"] != '') {
+                        $sql = "INSERT INTO $this->table (username, password) VALUES (?, ?)";
+                        $sth = $this->db->prepare($sql);
+                        $sth->execute(
+                            array(
+                                $data['username'],
+                                $data['password']
+                            )
+                        );
+                        $this->response->setResponse(true,  "Successful registration");
+                    } else {
+                        $this->response->setResponse(false, "Undefined password");
+                    }
                 } else {
                     $this->response->setResponse(false, "This account already exists");
                 }
