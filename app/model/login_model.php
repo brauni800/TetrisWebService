@@ -7,7 +7,7 @@ use App\Lib\Response;
 class LoginModel
 {
     private $db;
-    private $table = 'login';
+    private $table = 'user';
     private $response;
     
     public function __CONSTRUCT()
@@ -19,22 +19,27 @@ class LoginModel
     public function Login($data)
     {
         try {
-            if (isset($data['user']) && isset($data["password"])) {
-                $sql = "SELECT * FROM $this->table WHERE user = ?";
+            if (isset($data['username']) && isset($data["password"])) {
+                $sql = "SELECT username, password FROM $this->table WHERE username = ?";
                 $sth = $this->db->prepare($sql);
                 $sth->execute(
                     array(
-                        $data['user']
+                        $data['username']
                     )
                 );
                 $encode = json_encode($sth->fetchAll());
                 $decode = json_decode($encode, true);
 
-                if ($decode[0]['password'] == $data['password']) {
-                    $this->response->setResponse(true, "Successful login");
+                if ($decode) {
+                    if ($decode[0]['password'] == $data['password']) {
+                        $this->response->setResponse(true, "Successful login");
+                    } else {
+                        $this->response->setResponse(false, "Access denied");
+                    }
                 } else {
                     $this->response->setResponse(false, "Access denied");
                 }
+                
             } else {
                 $this->response->setResponse(false, "DB error: " . implode(" , ", $data));
             }
