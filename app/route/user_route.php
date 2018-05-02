@@ -19,6 +19,21 @@ $app->group('/user/', function () {
         );
     });
 
+    $this->post('signup', function($req, $res, $args) {
+        $um = new LoginModel();
+
+        return $res
+        ->withHeader('Content-type', 'application/json')
+        ->getBody()
+        ->write(
+        json_encode(
+                $um->Signup(
+                    $req->getParsedBody()
+                )
+            )
+        );
+    });
+
     /**
      * Rutas para tomar de ejemplo
      */

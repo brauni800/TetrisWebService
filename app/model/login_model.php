@@ -16,8 +16,7 @@ class LoginModel
         $this->response = new Response();
     }
 
-    public function Login($data)
-    {
+    public function Login($data) {
         try {
             if (isset($data['username']) && isset($data["password"])) {
                 $sql = "SELECT username, password FROM $this->table WHERE username = ?";
@@ -40,6 +39,42 @@ class LoginModel
                     $this->response->setResponse(false, "Access denied");
                 }
                 
+            } else {
+                $this->response->setResponse(false, "DB error: " . implode(" , ", $data));
+            }
+            return $this->response;
+        } catch (Exception $e) {
+            $this->response->setResponse(false, $e->getMessage());
+            return $this->response;
+        }
+    }
+
+    public function Signup($data) {
+        try {
+            if (isset($data['username']) && isset($data["password"])) {
+                $sql = "SELECT username FROM $this->table WHERE username = ?";
+                $sth = $this->db->prepare($sql);
+                $sth->execute(
+                    array(
+                        $data['username']
+                    )
+                );
+                $encode = json_encode($sth->fetchAll());
+                $decode = json_decode($encode, true);
+
+                if (!$decode) {
+                    $sql = "INSERT INTO $this->table (username, password) VALUES (?, ?)";
+                    $sth = $this->db->prepare($sql);
+                    $sth->execute(
+                        array(
+                            $data['username'],
+                            $data['password']
+                        )
+                    );
+                    $this->response->setResponse(true, "Successful registration");
+                } else {
+                    $this->response->setResponse(false, "This account already exists");
+                }
             } else {
                 $this->response->setResponse(false, "DB error: " . implode(" , ", $data));
             }
