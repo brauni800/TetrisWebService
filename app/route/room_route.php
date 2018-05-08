@@ -30,4 +30,30 @@ $app->group('/room/', function (){
             )
         );
     });
+
+    $this->put('enter/{id_user}&{id_room}', function ($req, $res, $args) {
+        $rm = new RoomModel();
+        
+        return $res
+           ->withHeader('Content-type', 'application/json')
+           ->getBody()
+           ->write(
+            json_encode(
+                $rm->enterRoom($args['id_user'], $args['id_room'])
+            )
+        );
+    });
+
+    $this->put('leave/{id_user}&{id_room}', function ($req, $res, $args) {
+        $rm = new RoomModel();
+        
+        return $res
+           ->withHeader('Content-type', 'application/json')
+           ->getBody()
+           ->write(
+            json_encode(
+                $rm->leaveRoom($args['id_user'], $args['id_room'])
+            )
+        );
+    });
 });

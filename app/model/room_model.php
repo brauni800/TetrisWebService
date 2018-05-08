@@ -67,9 +67,39 @@ class RoomModel {
         }
     }
 
-    public function enterRoom($data) {
+    public function enterRoom($id_user, $id_room) {
         try {
+            if (isset($id_user) && $id_user != '') {
+                $sql = "SELECT current_players FROM $this->tableRoom WHERE id_room = ?";
+                $sth = $this->db->prepare($sql);
+                $sth->execute(
+                    array($id_room)
+                );
+                $result = $sth->fetch(PDO::FETCH_OBJ);
+                $result->current_players++;
+                
+                $sql = "UPDATE $this->tableRoom SET current_players = ? WHERE id_room = ?";
+                $sth = $this->db->prepare($sql);
+                $sth->execute(
+                    array(
+                        $result->current_players,
+                        $id_room
+                    )
+                );
 
+                $sql = "INSERT INTO $this->tableRoomUser (id_room, id_user) VALUES (?, ?)";
+                $sth = $this->db->prepare($sql);
+                $sth->execute(
+                    array(
+                        $id_room,
+                        $id_user
+                    )
+                );
+
+                $this->response->setResponse(true, 'Successful entry');
+            } else {
+                $this->response->setResponse(false, 'error en if ' . $id_user . ' .');
+            }
             return $this->response;
         } catch (Exception $e) {
             $this->response->setResponse(false, $e->getMessage());
@@ -77,9 +107,50 @@ class RoomModel {
         }
     }
 
-    public function leaveRoom($data) {
+    public function leaveRoom($id_user, $id_room) {
         try {
+            if (isset($id_user) && $id_user != '') {
+                $sql = "SELECT current_players FROM $this->tableRoom WHERE id_room = ?";
+                $sth = $this->db->prepare($sql);
+                $sth->execute(
+                    array($id_room)
+                );
+                $result = $sth->fetch(PDO::FETCH_OBJ);
 
+                if ($result->current_players == 1) {
+                    $sql = "DELETE FROM $this->tableRoom WHERE id_room = ?";
+                    $sth = $this->db->prepare($sql);
+                    $sth->execute(
+                        array($id_room)
+                    );
+
+                    $sql = "DELETE FROM $this->tableRoomUser WHERE id_user = ?";
+                    $sth = $this->db->prepare($sql);
+                    $sth->execute(
+                        array($id_user)
+                    );
+                } else {
+                    $result->current_players--;
+                
+                    $sql = "UPDATE $this->tableRoom SET current_players = ? WHERE id_room = ?";
+                    $sth = $this->db->prepare($sql);
+                    $sth->execute(
+                        array(
+                            $result->current_players,
+                            $id_room
+                        )
+                    );
+    
+                    $sql = "DELETE FROM $this->tableRoomUser WHERE id_user = ?";
+                    $sth = $this->db->prepare($sql);
+                    $sth->execute(
+                        array($id_user)
+                    );
+                }
+                $this->response->setResponse(true, 'Successful delete');
+            } else {
+                $this->response->setResponse(false, 'error en if ' . $id_user . ' .');
+            }
             return $this->response;
         } catch (Exception $e) {
             $this->response->setResponse(false, $e->getMessage());
