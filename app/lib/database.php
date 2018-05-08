@@ -18,4 +18,7 @@ class Database
         
         return $pdo;
     }
+
+    public static $FETCH_COLUMN = PDO::FETCH_COLUMN;
+
 }
