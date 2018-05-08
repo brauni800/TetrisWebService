@@ -3,11 +3,12 @@ namespace App\Room;
 
 use App\Lib\Database;
 use App\Lib\Response;
+use PDO;
 
 class RoomModel {
     private $db;
     private $tableRoom = 'room';
-    private $tableRoomUser = 'room-users';
+    private $tableRoomUser = 'roomusers';
     private $response;
     
     public function __CONSTRUCT() {
@@ -36,8 +37,8 @@ class RoomModel {
                 $sth = $this->db->prepare($sql);
                 $sth->execute(
                     array(
-                        (int)$id_room,
-                        (int)$data["id_user"]
+                        $id_room,
+                        $data["id_user"]
                     )
                 );
                 
