@@ -53,9 +53,14 @@ class RoomModel {
         }
     }
 
-    public function getAllRoom($data) {
+    public function getAllRoom() {
         try {
-
+            $sql = "SELECT * FROM $this->tableRoom";
+            $sth = $this->db->prepare($sql);
+            if ($sth->execute()) {
+                $this->response->setResponse(true, $sth->fetchAll());
+            }
+            return $this->response;
         } catch (Exception $e) {
             $this->response->setResponse(false, $e->getMessage());
             return $this->response;
@@ -65,6 +70,7 @@ class RoomModel {
     public function enterRoom($data) {
         try {
 
+            return $this->response;
         } catch (Exception $e) {
             $this->response->setResponse(false, $e->getMessage());
             return $this->response;
@@ -74,6 +80,7 @@ class RoomModel {
     public function leaveRoom($data) {
         try {
 
+            return $this->response;
         } catch (Exception $e) {
             $this->response->setResponse(false, $e->getMessage());
             return $this->response;
