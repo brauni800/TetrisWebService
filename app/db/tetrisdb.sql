@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 08-05-2018 a las 06:32:29
+-- Tiempo de generación: 08-05-2018 a las 08:49:43
 -- Versión del servidor: 10.1.31-MariaDB
 -- Versión de PHP: 7.2.3
 
@@ -73,13 +73,6 @@ CREATE TABLE `room` (
   `difficulty` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
---
--- Volcado de datos para la tabla `room`
---
-
-INSERT INTO `room` (`id_room`, `name`, `description`, `max_players`, `current_players`, `difficulty`) VALUES
-(2, 'ejemplo', 'hola', 3, 1, 1);
-
 -- --------------------------------------------------------
 
 --
@@ -90,13 +83,6 @@ CREATE TABLE `roomusers` (
   `id_room` int(11) NOT NULL,
   `id_user` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
-
---
--- Volcado de datos para la tabla `roomusers`
---
-
-INSERT INTO `roomusers` (`id_room`, `id_user`) VALUES
-(2, 1);
 
 -- --------------------------------------------------------
 
@@ -115,7 +101,9 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id_user`, `username`, `password`) VALUES
-(1, 'brauni800', 'Okla2217');
+(1, 'brauni800', 'Okla2217'),
+(2, 'elvato', '98765'),
+(3, 'meko', '12345');
 
 --
 -- Índices para tablas volcadas
@@ -186,13 +174,13 @@ ALTER TABLE `message`
 -- AUTO_INCREMENT de la tabla `room`
 --
 ALTER TABLE `room`
-  MODIFY `id_room` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_room` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `user`
 --
 ALTER TABLE `user`
-  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Restricciones para tablas volcadas
