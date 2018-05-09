@@ -10,10 +10,12 @@ class RoomModel {
     private $tableRoom = 'room';
     private $tableRoomUser = 'roomusers';
     private $response;
+    private $codeErrors;
     
     public function __CONSTRUCT() {
         $this->db = Database::StartUp();
         $this->response = new Response();
+        $this->codeErrors = json_decode(file_get_contents('../codes.json/'), true);
     }
 
     public function newRoom($data) {
@@ -50,7 +52,7 @@ class RoomModel {
                         )
                     );
                     
-                    $this->response->setResponse(true, "Successful registry");
+                    $this->response->setResponse(true, $this->codeErrors['NR1']);
                 } else {
                     $this->response->setResponse(false, "This user is already in a room");
                 }
@@ -130,8 +132,6 @@ class RoomModel {
                 } else {
                     $this->response->setResponse(false, 'The user is already in a room');
                 }
-            } else {
-                $this->response->setResponse(false, 'if error ' . $id_user . ' .');
             }
             return $this->response;
         } catch (Exception $e) {
@@ -198,8 +198,6 @@ class RoomModel {
                 } else {
                     $this->response->setResponse(false, 'The room does not exist');
                 }
-            } else {
-                $this->response->setResponse(false, 'if error ' . $id_user . ' .');
             }
             return $this->response;
         } catch (Exception $e) {

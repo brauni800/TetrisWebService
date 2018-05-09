@@ -10,6 +10,8 @@
         "SU3": "This account already exists",
         "NR1": "Successful registry",
         "ER1": "The room is full",
-        "ER3": "The room does not exist"
+        "ER3": "The room does not exist",
+        "LR1": "Successful delete",
+        "LR2": "The user is not in the room"
     }
 }
