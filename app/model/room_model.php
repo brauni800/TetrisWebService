@@ -17,7 +17,15 @@ class RoomModel {
         $this->response = new Response();
         $this->codeErrors = json_decode(file_get_contents('http://localhost/TetrisWebService/app/codes.json'), true)['codes']['room'];
     }
-
+    /**
+     * params {
+     *      id_user: int
+     *      name: str
+     *      description: str
+     *      max_players: int
+     *      difficulty: int
+     * }
+     */
     public function newRoom($data) {
         try {
             if (isset($data["id_user"], $data["name"], $data["description"], $data["max_players"], $data["difficulty"])

@@ -3,6 +3,16 @@
 use App\Room\RoomModel;
 
 $app->group('/room/', function (){
+
+    /**
+     * params {
+     *      id_user: int
+     *      name: str
+     *      description: str
+     *      max_players: int
+     *      difficulty: int
+     * }
+     */
     $this->post('new', function ($req, $res, $args) {
         $rm = new RoomModel();
         

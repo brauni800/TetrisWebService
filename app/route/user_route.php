@@ -4,6 +4,12 @@ use App\User\UserModel;
 
 $app->group('/user/', function () {
 
+    /**
+     * params{
+     *      username: str
+     *      password: str
+     * }
+     */
     $this->post('login', function ($req, $res, $args) {
         $um = new UserModel();
         
@@ -19,6 +25,12 @@ $app->group('/user/', function () {
         );
     });
 
+    /**
+     * params{
+     *      username: str
+     *      password: str
+     * }
+     */
     $this->post('signup', function($req, $res, $args) {
         $um = new UserModel();
 
@@ -35,7 +47,9 @@ $app->group('/user/', function () {
     });
 
     /**
-     * Rutas para tomar de ejemplo
+     * ************************************************************************
+     * **********************Rutas para tomar de ejemplo***********************
+     * ************************************************************************
      */
 
     $this->get('test', function ($req, $res, $args) {

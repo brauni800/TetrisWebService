@@ -16,6 +16,12 @@ class UserModel {
         $this->codeErrors = json_decode(file_get_contents('http://localhost/TetrisWebService/app/codes.json'), true)['codes']['user'];
     }
 
+    /**
+     * params{
+     *      username: str
+     *      password: str
+     * }
+     */
     public function Login($data) {
         try {
             if (isset($data['username']) && isset($data["password"])) {
@@ -49,6 +55,12 @@ class UserModel {
         }
     }
 
+    /**
+     * params{
+     *      username: str
+     *      password: str
+     * }
+     */
     public function Signup($data) {
         try {
             if (isset($data['username'])) {
