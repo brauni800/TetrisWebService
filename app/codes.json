@@ -1,0 +1,15 @@
+{
+    "codes": {
+        "GL1": "Access denied",
+        "GL2": "DB error",
+        "GL3": "Error in the parameters",
+        "GL4": "The user is already in a room",
+        "LI1": "Successful login",
+        "SU1": "Successful registration",
+        "SU2": "Undefined password",
+        "SU3": "This account already exists",
+        "NR1": "Successful registry",
+        "ER1": "The room is full",
+        "ER3": "The room does not exist"
+    }
+}
