@@ -8,10 +8,12 @@ class UserModel {
     private $db;
     private $table = 'user';
     private $response;
+    private $codeErrors;
     
     public function __CONSTRUCT() {
         $this->db = Database::StartUp();
         $this->response = new Response();
+        $this->codeErrors = json_decode(file_get_contents('http://localhost/TetrisWebService/app/codes.json'), true)['codes']['user'];
     }
 
     public function Login($data) {
@@ -29,16 +31,16 @@ class UserModel {
 
                 if ($decode) {
                     if ($decode[0]['password'] == $data['password']) {
-                        $this->response->setResponse(true, "Successful login");
+                        $this->response->setResponse(true, $this->codeErrors['login']['LI001']);
                     } else {
-                        $this->response->setResponse(false, "Access denied");
+                        $this->response->setResponse(false, $this->codeErrors['login']['LI002']);
                     }
                 } else {
-                    $this->response->setResponse(false, "Access denied");
+                    $this->response->setResponse(false, $this->codeErrors['login']['LI002']);
                 }
                 
             } else {
-                $this->response->setResponse(false, "DB error: " . implode(" , ", $data));
+                $this->response->setResponse(false, $this->codeErrors['login']['LI003'] . ': ' . implode(" , ", $data));
             }
             return $this->response;
         } catch (Exception $e) {
@@ -70,15 +72,15 @@ class UserModel {
                                 $data['password']
                             )
                         );
-                        $this->response->setResponse(true,  "Successful registration");
+                        $this->response->setResponse(true,  $this->codeErrors['signup']['SU001']);
                     } else {
-                        $this->response->setResponse(false, "Undefined password");
+                        $this->response->setResponse(false, $this->codeErrors['signup']['SU002']);
                     }
                 } else {
-                    $this->response->setResponse(false, "This account already exists");
+                    $this->response->setResponse(false, $this->codeErrors['signup']['SU003']);
                 }
             } else {
-                $this->response->setResponse(false, "DB error: " . implode(" , ", $data));
+                $this->response->setResponse(false, $this->codeErrors['signup']['SU004'] . ': ' . implode(" , ", $data));
             }
             return $this->response;
         } catch (Exception $e) {

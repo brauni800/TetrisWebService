@@ -15,7 +15,7 @@ class RoomModel {
     public function __CONSTRUCT() {
         $this->db = Database::StartUp();
         $this->response = new Response();
-        $this->codeErrors = json_decode(file_get_contents('../codes.json/'), true);
+        $this->codeErrors = json_decode(file_get_contents('http://localhost/TetrisWebService/app/codes.json'), true)['codes']['room'];
     }
 
     public function newRoom($data) {
@@ -52,12 +52,12 @@ class RoomModel {
                         )
                     );
                     
-                    $this->response->setResponse(true, $this->codeErrors['NR1']);
+                    $this->response->setResponse(true, $this->codeErrors['new']['NR001']);
                 } else {
-                    $this->response->setResponse(false, "This user is already in a room");
+                    $this->response->setResponse(false, $this->codeErrors['new']['NR002']);
                 }
             } else {
-                $this->response->setResponse(false, "Error in the parameters");
+                $this->response->setResponse(false, $this->codeErrors['new']['NR003']);
             }
             return $this->response;
         } catch (Exception $e) {
@@ -122,15 +122,15 @@ class RoomModel {
                                 )
                             );
         
-                            $this->response->setResponse(true, 'Successful entry');
+                            $this->response->setResponse(true, $this->codeErrors['enter']['ER001']);
                         } else {
-                            $this->response->setResponse(false, 'The room is full');
+                            $this->response->setResponse(false, $this->codeErrors['enter']['ER002']);
                         }
                     } else {
-                        $this->response->setResponse(false, 'The room does not exist');
+                        $this->response->setResponse(false, $this->codeErrors['enter']['ER003']);
                     }
                 } else {
-                    $this->response->setResponse(false, 'The user is already in a room');
+                    $this->response->setResponse(false, $this->codeErrors['enter']['ER004']);
                 }
             }
             return $this->response;
@@ -188,15 +188,15 @@ class RoomModel {
                                     array($id_user)
                                 );
                             }
-                            $this->response->setResponse(true, 'Successful delete');
+                            $this->response->setResponse(true, $this->codeErrors['leave']['LR001']);
                         } else {
-                            $this->response->setResponse(true, "The user is not in the room");
+                            $this->response->setResponse(true, $this->codeErrors['leave']['LR002']);
                         }
                     } else {
-                        $this->response->setResponse(false, 'The user with id ' . $id_user . ' is not in the room');
+                        $this->response->setResponse(false, $this->codeErrors['leave']['LR002']);
                     }
                 } else {
-                    $this->response->setResponse(false, 'The room does not exist');
+                    $this->response->setResponse(false, $this->codeErrors['leave']['LR003']);
                 }
             }
             return $this->response;

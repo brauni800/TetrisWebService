@@ -1,17 +1,36 @@
 {
     "codes": {
-        "GL1": "Access denied",
-        "GL2": "DB error",
-        "GL3": "Error in the parameters",
-        "GL4": "The user is already in a room",
-        "LI1": "Successful login",
-        "SU1": "Successful registration",
-        "SU2": "Undefined password",
-        "SU3": "This account already exists",
-        "NR1": "Successful registry",
-        "ER1": "The room is full",
-        "ER3": "The room does not exist",
-        "LR1": "Successful delete",
-        "LR2": "The user is not in the room"
+        "default": "Ocurrio un error inesperado",
+        "user": {
+            "login": {
+                "LI001": "Successful login",
+                "LI002": "Access denied",
+                "LI003": "DB error"
+            },
+            "signup": {
+                "SU001": "Successful registration",
+                "SU002": "Undefined password",
+                "SU003": "This account already exists",
+                "SU004": "DB error"
+            }
+        },
+        "room": {
+            "new": {
+                "NR001": "Successful registry",
+                "NR002": "The user is already in a room",
+                "NR003": "Error in the parameters"
+            },
+            "enter": {
+                "ER001": "Successful entry",
+                "ER002": "The room is full",
+                "ER003": "The room does not exist",
+                "ER004": "The user is already in a room"
+            },
+            "leave": {
+                "LR001": "Successful delete",
+                "LR002": "The user is not in the room",
+                "LR003": "The room does not exist"
+            }
+        }
     }
 }

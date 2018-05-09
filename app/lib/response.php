@@ -1,16 +1,19 @@
 <?php
 namespace App\Lib;
 
-class Response
-{
-	public $response   = false;
-	public $message    = 'Ocurrio un error inesperado.';
+class Response {
+	public $response;
+	public $message;
 	
-	public function SetResponse($response, $m = '')
-	{
-		$this->response = $response;
-		$this->message = $m;
+	public function __CONSTRUCT() {
+		$this->response = false;
+		$this->message = json_decode(file_get_contents('http://localhost/TetrisWebService/app/codes.json'), true)['codes']['default'];
+	}
 
-		if(!$response && $m = '') $this->response = 'Ocurrio un error inesperado';
+	public function SetResponse($res, $m)	{
+		$this->response = $res;
+		if ($m != '') {
+			$this->message = $m;
+		}
 	}
 }
