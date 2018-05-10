@@ -17,6 +17,7 @@ class RoomModel {
         $this->response = new Response();
         $this->codeErrors = json_decode(file_get_contents('http://localhost/TetrisWebService/app/codes.json'), true)['codes']['room'];
     }
+    
     /**
      * params {
      *      id_user: int

@@ -31,6 +31,9 @@
                 "LR002": "The user is not in the room",
                 "LR003": "The room does not exist"
             }
+        },
+        "friend": {
+            
         }
     }
 }
