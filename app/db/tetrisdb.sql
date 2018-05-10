@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 09, 2018 at 05:58 AM
+-- Generation Time: May 11, 2018 at 01:19 AM
 -- Server version: 10.1.31-MariaDB
 -- PHP Version: 7.2.4
 
@@ -41,9 +41,19 @@ CREATE TABLE `chat` (
 --
 
 CREATE TABLE `friend` (
-  `id_user` int(11) NOT NULL,
-  `id_friend` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+  `id_user` int(11) DEFAULT NULL,
+  `id_friend` int(11) DEFAULT NULL,
+  `request` varchar(15) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `friend`
+--
+
+INSERT INTO `friend` (`id_user`, `id_friend`, `request`) VALUES
+(1, 4, 'WAITING'),
+(1, 5, 'ACCEPTED'),
+(2, 5, 'WAITING');
 
 -- --------------------------------------------------------
 
@@ -139,15 +149,6 @@ ALTER TABLE `chat`
   ADD KEY `id_receiver` (`id_receiver`);
 
 --
--- Indexes for table `friend`
---
-ALTER TABLE `friend`
-  ADD UNIQUE KEY `id_user_2` (`id_user`),
-  ADD UNIQUE KEY `id_friend_2` (`id_friend`),
-  ADD KEY `id_user` (`id_user`),
-  ADD KEY `id_friend` (`id_friend`);
-
---
 -- Indexes for table `message`
 --
 ALTER TABLE `message`
@@ -213,13 +214,6 @@ ALTER TABLE `user`
 ALTER TABLE `chat`
   ADD CONSTRAINT `Chat_ibfk_1` FOREIGN KEY (`id_remitter`) REFERENCES `user` (`id_user`),
   ADD CONSTRAINT `Chat_ibfk_2` FOREIGN KEY (`id_receiver`) REFERENCES `user` (`id_user`);
-
---
--- Constraints for table `friend`
---
-ALTER TABLE `friend`
-  ADD CONSTRAINT `Friend_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `user` (`id_user`),
-  ADD CONSTRAINT `Friend_ibfk_2` FOREIGN KEY (`id_friend`) REFERENCES `user` (`id_user`);
 
 --
 -- Constraints for table `message`
