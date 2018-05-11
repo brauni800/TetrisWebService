@@ -3,6 +3,13 @@
 use App\Friend\FriendModel;
 
 $app->group('/friend/', function (){
+
+    /**
+     * parameters {
+     *      id_user: int        el que solicita
+     *      id_friend: int      el solicitado
+     * }
+     */
     $this->post('sendRequest', function ($req, $res, $args) {
         $fm = new FriendModel();
         
@@ -18,6 +25,12 @@ $app->group('/friend/', function (){
         );
     });
 
+    /**
+     * parameters {
+     *      id_user: int        el que rechaza
+     *      id_friend: int      el rechazado
+     * }
+     */
     $this->post('rejectRequest', function ($req, $res, $args) {
         $fm = new FriendModel();
         
@@ -46,6 +59,12 @@ $app->group('/friend/', function (){
         );
     });
 
+    /**
+     * parameters {
+     *      id_user: int        el que acepta
+     *      id_friend: int      el aceptado
+     * }
+     */
     $this->post('acceptRequest', function ($req, $res, $args) {
         $fm = new FriendModel();
         
@@ -61,6 +80,12 @@ $app->group('/friend/', function (){
         );
     });
 
+    /**
+     * parameters {
+     *      id_user: int        el que elimina
+     *      id_friend: int      el eliminado, como ella a ti :,v  https://www.youtube.com/watch?v=Bk3lknaWI9Q
+     * }
+     */
     $this->post('removeRequest', function ($req, $res, $args) {
         $fm = new FriendModel();
         

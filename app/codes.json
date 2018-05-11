@@ -54,6 +54,9 @@
                 "RM001": "Amigo eliminado",
                 "RM002": "La solicitud no existe"
             }
+        },
+        "message": {
+
         }
     }
 }

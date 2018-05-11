@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 11-05-2018 a las 05:44:17
+-- Tiempo de generación: 11-05-2018 a las 21:35:19
 -- Versión del servidor: 10.1.31-MariaDB
 -- Versión de PHP: 7.2.3
 
@@ -29,9 +29,8 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `chat` (
-  `id_chat` int(11) NOT NULL,
-  `id_remitter` int(11) NOT NULL,
-  `id_receiver` int(11) NOT NULL
+  `id_chat` int(11) DEFAULT NULL,
+  `id_user` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 -- --------------------------------------------------------
@@ -52,12 +51,8 @@ CREATE TABLE `friend` (
 --
 
 INSERT INTO `friend` (`id_user`, `request_user`, `id_friend`, `request_friend`) VALUES
-(1, 'SENT', 4, 'WAITING'),
-(4, 'WAITING', 1, 'SENT'),
 (1, 'SENT', 5, 'WAITING'),
-(5, 'WAITING', 1, 'SENT'),
-(2, 'ACCEPTED', 3, 'ACCEPTED'),
-(3, 'ACCEPTED', 2, 'ACCEPTED');
+(5, 'WAITING', 1, 'SENT');
 
 -- --------------------------------------------------------
 
@@ -68,8 +63,8 @@ INSERT INTO `friend` (`id_user`, `request_user`, `id_friend`, `request_friend`) 
 CREATE TABLE `message` (
   `id_message` int(11) NOT NULL,
   `id_chat` int(11) NOT NULL,
-  `content` varchar(300) COLLATE utf8mb4_spanish_ci NOT NULL,
-  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `content` varchar(300) COLLATE utf8mb4_spanish_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 -- --------------------------------------------------------
@@ -145,14 +140,6 @@ INSERT INTO `user` (`id_user`, `username`, `password`) VALUES
 --
 
 --
--- Indices de la tabla `chat`
---
-ALTER TABLE `chat`
-  ADD PRIMARY KEY (`id_chat`),
-  ADD KEY `id_remitter` (`id_remitter`) USING BTREE,
-  ADD KEY `id_receiver` (`id_receiver`);
-
---
 -- Indices de la tabla `message`
 --
 ALTER TABLE `message`
@@ -185,12 +172,6 @@ ALTER TABLE `user`
 --
 
 --
--- AUTO_INCREMENT de la tabla `chat`
---
-ALTER TABLE `chat`
-  MODIFY `id_chat` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT de la tabla `message`
 --
 ALTER TABLE `message`
@@ -211,19 +192,6 @@ ALTER TABLE `user`
 --
 -- Restricciones para tablas volcadas
 --
-
---
--- Filtros para la tabla `chat`
---
-ALTER TABLE `chat`
-  ADD CONSTRAINT `Chat_ibfk_1` FOREIGN KEY (`id_remitter`) REFERENCES `user` (`id_user`),
-  ADD CONSTRAINT `Chat_ibfk_2` FOREIGN KEY (`id_receiver`) REFERENCES `user` (`id_user`);
-
---
--- Filtros para la tabla `message`
---
-ALTER TABLE `message`
-  ADD CONSTRAINT `Message_ibfk_2` FOREIGN KEY (`id_chat`) REFERENCES `chat` (`id_chat`);
 
 --
 -- Filtros para la tabla `roomusers`

@@ -8,6 +8,7 @@ use PDO;
 class FriendModel {
     private $db;
     private $tableFriend = 'friend';
+    private $tableChat = 'chat';
     private $response;
     private $codeErrors;
     private $statusRequest;
@@ -189,6 +190,22 @@ class FriendModel {
                             $this->statusRequest['waiting']
                         )
                     );
+
+                    $sql = "INSERT INTO $this->tableChat (id_remitter, id_receiver) VALUES (?, ?)";
+                    $sth = $this->db->prepare($sql);
+                    $result = $sth->execute(
+                        array(
+                            $data['id_user'],
+                            $data['id_friend']
+                        )
+                    );
+                    $result = $sth->execute(
+                        array(
+                            $data['id_friend'],
+                            $data['id_user']
+                        )
+                    );
+
                     $this->response->setResponse(true, $this->codeErrors['acceptFriend']['AF001']);
                 } else {
                     $this->response->setResponse(false, $this->codeErrors['acceptFriend']['AF002']);
@@ -227,6 +244,21 @@ class FriendModel {
                             $this->statusRequest['accepted'],
                             $data['id_user'],
                             $this->statusRequest['accepted']
+                        )
+                    );
+
+                    $sql = "DELETE FROM $this->tableChat WHERE id_remitter = ? AND id_receiver = ?";
+                    $sth = $this->db->prepare($sql);
+                    $result = $sth->execute(
+                        array(
+                            $data['id_user'],
+                            $data['id_friend']
+                        )
+                    );
+                    $result = $sth->execute(
+                        array(
+                            $data['id_friend'],
+                            $data['id_user']
                         )
                     );
                     $this->response->setResponse(true, $this->codeErrors['removeFriend']['RM001']);
