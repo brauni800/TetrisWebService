@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.0
+-- version 4.7.9
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: May 11, 2018 at 01:19 AM
--- Server version: 10.1.31-MariaDB
--- PHP Version: 7.2.4
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 11-05-2018 a las 05:44:17
+-- Versión del servidor: 10.1.31-MariaDB
+-- Versión de PHP: 7.2.3
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -19,13 +19,13 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `tetrisdb`
+-- Base de datos: `tetrisdb`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `chat`
+-- Estructura de tabla para la tabla `chat`
 --
 
 CREATE TABLE `chat` (
@@ -37,28 +37,32 @@ CREATE TABLE `chat` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `friend`
+-- Estructura de tabla para la tabla `friend`
 --
 
 CREATE TABLE `friend` (
   `id_user` int(11) DEFAULT NULL,
+  `request_user` varchar(15) DEFAULT NULL,
   `id_friend` int(11) DEFAULT NULL,
-  `request` varchar(15) DEFAULT NULL
+  `request_friend` varchar(15) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `friend`
+-- Volcado de datos para la tabla `friend`
 --
 
-INSERT INTO `friend` (`id_user`, `id_friend`, `request`) VALUES
-(1, 4, 'WAITING'),
-(1, 5, 'ACCEPTED'),
-(2, 5, 'WAITING');
+INSERT INTO `friend` (`id_user`, `request_user`, `id_friend`, `request_friend`) VALUES
+(1, 'SENT', 4, 'WAITING'),
+(4, 'WAITING', 1, 'SENT'),
+(1, 'SENT', 5, 'WAITING'),
+(5, 'WAITING', 1, 'SENT'),
+(2, 'ACCEPTED', 3, 'ACCEPTED'),
+(3, 'ACCEPTED', 2, 'ACCEPTED');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `message`
+-- Estructura de tabla para la tabla `message`
 --
 
 CREATE TABLE `message` (
@@ -71,7 +75,7 @@ CREATE TABLE `message` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `room`
+-- Estructura de tabla para la tabla `room`
 --
 
 CREATE TABLE `room` (
@@ -84,7 +88,7 @@ CREATE TABLE `room` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 --
--- Dumping data for table `room`
+-- Volcado de datos para la tabla `room`
 --
 
 INSERT INTO `room` (`id_room`, `name`, `description`, `max_players`, `current_players`, `difficulty`) VALUES
@@ -94,7 +98,7 @@ INSERT INTO `room` (`id_room`, `name`, `description`, `max_players`, `current_pl
 -- --------------------------------------------------------
 
 --
--- Table structure for table `roomusers`
+-- Estructura de tabla para la tabla `roomusers`
 --
 
 CREATE TABLE `roomusers` (
@@ -103,7 +107,7 @@ CREATE TABLE `roomusers` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 --
--- Dumping data for table `roomusers`
+-- Volcado de datos para la tabla `roomusers`
 --
 
 INSERT INTO `roomusers` (`id_room`, `id_user`) VALUES
@@ -115,7 +119,7 @@ INSERT INTO `roomusers` (`id_room`, `id_user`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user`
+-- Estructura de tabla para la tabla `user`
 --
 
 CREATE TABLE `user` (
@@ -125,7 +129,7 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 --
--- Dumping data for table `user`
+-- Volcado de datos para la tabla `user`
 --
 
 INSERT INTO `user` (`id_user`, `username`, `password`) VALUES
@@ -137,11 +141,11 @@ INSERT INTO `user` (`id_user`, `username`, `password`) VALUES
 (6, 'yOtroMas', '98765');
 
 --
--- Indexes for dumped tables
+-- Índices para tablas volcadas
 --
 
 --
--- Indexes for table `chat`
+-- Indices de la tabla `chat`
 --
 ALTER TABLE `chat`
   ADD PRIMARY KEY (`id_chat`),
@@ -149,80 +153,80 @@ ALTER TABLE `chat`
   ADD KEY `id_receiver` (`id_receiver`);
 
 --
--- Indexes for table `message`
+-- Indices de la tabla `message`
 --
 ALTER TABLE `message`
   ADD PRIMARY KEY (`id_message`),
   ADD KEY `id_chat` (`id_chat`);
 
 --
--- Indexes for table `room`
+-- Indices de la tabla `room`
 --
 ALTER TABLE `room`
   ADD PRIMARY KEY (`id_room`),
   ADD UNIQUE KEY `name` (`name`);
 
 --
--- Indexes for table `roomusers`
+-- Indices de la tabla `roomusers`
 --
 ALTER TABLE `roomusers`
   ADD KEY `id_room` (`id_room`),
   ADD KEY `id_user` (`id_user`);
 
 --
--- Indexes for table `user`
+-- Indices de la tabla `user`
 --
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id_user`),
   ADD UNIQUE KEY `username` (`username`);
 
 --
--- AUTO_INCREMENT for dumped tables
+-- AUTO_INCREMENT de las tablas volcadas
 --
 
 --
--- AUTO_INCREMENT for table `chat`
+-- AUTO_INCREMENT de la tabla `chat`
 --
 ALTER TABLE `chat`
   MODIFY `id_chat` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `message`
+-- AUTO_INCREMENT de la tabla `message`
 --
 ALTER TABLE `message`
   MODIFY `id_message` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `room`
+-- AUTO_INCREMENT de la tabla `room`
 --
 ALTER TABLE `room`
   MODIFY `id_room` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
--- AUTO_INCREMENT for table `user`
+-- AUTO_INCREMENT de la tabla `user`
 --
 ALTER TABLE `user`
   MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- Constraints for dumped tables
+-- Restricciones para tablas volcadas
 --
 
 --
--- Constraints for table `chat`
+-- Filtros para la tabla `chat`
 --
 ALTER TABLE `chat`
   ADD CONSTRAINT `Chat_ibfk_1` FOREIGN KEY (`id_remitter`) REFERENCES `user` (`id_user`),
   ADD CONSTRAINT `Chat_ibfk_2` FOREIGN KEY (`id_receiver`) REFERENCES `user` (`id_user`);
 
 --
--- Constraints for table `message`
+-- Filtros para la tabla `message`
 --
 ALTER TABLE `message`
   ADD CONSTRAINT `Message_ibfk_2` FOREIGN KEY (`id_chat`) REFERENCES `chat` (`id_chat`);
 
 --
--- Constraints for table `roomusers`
+-- Filtros para la tabla `roomusers`
 --
 ALTER TABLE `roomusers`
   ADD CONSTRAINT `Room-Users_ibfk_1` FOREIGN KEY (`id_room`) REFERENCES `room` (`id_room`),
