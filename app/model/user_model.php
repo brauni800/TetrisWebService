@@ -37,7 +37,7 @@ class UserModel {
 
                 if ($result) {
                     if ($result->password == $data['password']) {
-                        $this->response->setResponse(true, $result->id_user);
+                        $this->response->setResponse(true, $this->codeErrors['login']['LI001'], $result->id_user);
                     } else {
                         $this->response->setResponse(false, $this->codeErrors['login']['LI002']);
                     }

@@ -273,6 +273,6 @@ class FriendModel {
     }
 
     public function getAllFriend($data) {
-
+        
     }
 }
