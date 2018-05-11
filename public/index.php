@@ -18,6 +18,10 @@ session_start();
 $settings = require __DIR__ . '/../src/settings.php';
 $app = new \Slim\App($settings);
 
+$app->response->withHeader('Access-Control-Allow-Origin:', '*');
+$app->response->withHeader('Access-Control-Allow-Methods:', 'GET, POST, PATCH, PUT, DELETE, OPTIONS');
+$app->response->withHeader('Access-Control-Allow-Headers:', 'Origin, Content-Type, X-Auth-Token');
+
 // Set up dependencies
 require __DIR__ . '/../src/dependencies.php';
 
