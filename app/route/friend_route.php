@@ -100,4 +100,5 @@ $app->group('/friend/', function (){
             )
         );
     });
+
 });

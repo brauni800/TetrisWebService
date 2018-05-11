@@ -3,6 +3,7 @@ namespace App\User;
 
 use App\Lib\Database;
 use App\Lib\Response;
+use PDO;
 
 class UserModel {
     private $db;
@@ -25,19 +26,18 @@ class UserModel {
     public function Login($data) {
         try {
             if (isset($data['username']) && isset($data["password"])) {
-                $sql = "SELECT username, password FROM $this->table WHERE username = ?";
+                $sql = "SELECT * FROM $this->table WHERE username = ?";
                 $sth = $this->db->prepare($sql);
                 $sth->execute(
                     array(
                         $data['username']
                     )
                 );
-                $encode = json_encode($sth->fetchAll());
-                $decode = json_decode($encode, true);
+                $result = $sth->fetch(PDO::FETCH_OBJ);
 
-                if ($decode) {
-                    if ($decode[0]['password'] == $data['password']) {
-                        $this->response->setResponse(true, $this->codeErrors['login']['LI001']);
+                if ($result) {
+                    if ($result->password == $data['password']) {
+                        $this->response->setResponse(true, $result->id_user);
                     } else {
                         $this->response->setResponse(false, $this->codeErrors['login']['LI002']);
                     }

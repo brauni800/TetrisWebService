@@ -271,4 +271,8 @@ class FriendModel {
         }
         return $this->response;
     }
+
+    public function getAllFriend($data) {
+
+    }
 }
