@@ -11,7 +11,7 @@ $app->group('/friend/', function (){
            ->getBody()
            ->write(
             json_encode(
-                $fm->sendFriendRequest(
+                $fm->sendRequest(
                     $req->getParsedBody()
                 )
             )
@@ -26,7 +26,7 @@ $app->group('/friend/', function (){
            ->getBody()
            ->write(
             json_encode(
-                $fm->rejectFriendRequest(
+                $fm->rejectRequest(
                     $req->getParsedBody()
                 )
             )
@@ -55,6 +55,21 @@ $app->group('/friend/', function (){
            ->write(
             json_encode(
                 $fm->acceptFriend(
+                    $req->getParsedBody()
+                )
+            )
+        );
+    });
+
+    $this->post('removeRequest', function ($req, $res, $args) {
+        $fm = new FriendModel();
+        
+        return $res
+           ->withHeader('Content-type', 'application/json')
+           ->getBody()
+           ->write(
+            json_encode(
+                $fm->removeFriend(
                     $req->getParsedBody()
                 )
             )

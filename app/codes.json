@@ -33,7 +33,27 @@
             }
         },
         "friend": {
-            
+            "sendRequest": {
+                "SR001": "Solicitud enviada",
+                "SR002": "Solicitud rechazada",
+                "SR003": "Uno de los usuarios no existe"
+            },
+            "rejectRequest": {
+                "RR001": "Solicitud rechazada",
+                "RR002": "No se pudo rechazar la solicitud"
+            },
+            "getAllRequest": {
+                "GR001": "No hay solicitudes",
+                "GR002": "El usuario no existe"
+            },
+            "acceptFriend": {
+                "AF001": "Solicitud aceptada",
+                "AF002": "La solicitud no existe"
+            },
+            "removeFriend": {
+                "RM001": "Amigo eliminado",
+                "RM002": "La solicitud no existe"
+            }
         }
     }
 }

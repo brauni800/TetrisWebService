@@ -18,17 +18,18 @@ class FriendModel {
         $this->codeErrors = json_decode(file_get_contents('http://localhost/TetrisWebService/app/codes.json'), true)['codes']['friend'];
         $this->statusRequest = [
             'waiting' => 'WAITING',
-            'accepted' => 'ACCEPTED'
+            'accepted' => 'ACCEPTED',
+            'sent' => 'SENT'
         ];
     }
 
     /**
      * parameters {
-     *      id_user: int
-     *      id_friend: int
+     *      id_user: int        el que solicita
+     *      id_friend: int      el solicitado
      * }
      */
-    public function sendFriendRequest($data) {
+    public function sendRequest($data) {
         try {
             if (isset($data['id_user'], $data['id_friend']) && $data['id_user'] != '' && $data['id_friend'] != '') {
                 $sql = "SELECT user.id_user, friend.id_user AS id_friend
@@ -53,21 +54,30 @@ class FriendModel {
                     );
                     $result = $sth->fetch(PDO::FETCH_OBJ);
                     if (!$result) {
-                        $sql = "INSERT INTO $this->tableFriend (id_user, id_friend, request) VALUES (?, ?, ?)";
+                        $sql = "INSERT INTO $this->tableFriend (id_user, request_user, id_friend, request_friend) VALUES (?, ?, ?, ?)";
                         $sth = $this->db->prepare($sql);
                         $sth->execute(
                             array(
                                 $data['id_user'],
+                                $this->statusRequest['sent'],
                                 $data['id_friend'],
                                 $this->statusRequest['waiting']
                             )
                         );
-                        $this->response->setResponse(true, 'Solicitud enviada');
+                        $sth->execute(
+                            array(
+                                $data['id_friend'],
+                                $this->statusRequest['waiting'],
+                                $data['id_user'],
+                                $this->statusRequest['sent']
+                            )
+                        );
+                        $this->response->setResponse(true, $this->codeErrors['sendRequest']['SR001']);
                     } else {
-                        $this->response->setResponse(false, 'Solicitud rechazada');
+                        $this->response->setResponse(false, $this->codeErrors['sendRequest']['SR002']);
                     }
                 } else {
-                    $this->response->setResponse(false, 'Uno de los usuarios no existe');
+                    $this->response->setResponse(false, $this->codeErrors['sendRequest']['SR003']);
                 }
             }
         } catch (Exception $e) {
@@ -78,53 +88,36 @@ class FriendModel {
 
     /**
      * parameters {
-     *      id_user: int
-     *      id_friend: int
+     *      id_user: int        el que rechaza
+     *      id_friend: int      el rechazado
      * }
      */
-    public function rejectFriendRequest($data) {
+    public function rejectRequest($data) {
         try {
             if (isset($data['id_user'], $data['id_friend']) && $data['id_user'] != '' && $data['id_friend'] != '') {
-                $sql = "SELECT user.id_user, friend.id_user AS id_friend
-                        FROM user, (SELECT user.id_user FROM user WHERE user.id_user = ?) friend
-                        WHERE user.id_user = ?";
+
+                $sql = "DELETE FROM $this->tableFriend WHERE id_user = ? AND request_user = ? AND id_friend = ? AND request_friend = ?";
                 $sth = $this->db->prepare($sql);
-                $sth->execute(
+                $result = $sth->execute(
                     array(
+                        $data['id_user'],
+                        $this->statusRequest['waiting'],
                         $data['id_friend'],
-                        $data['id_user']
+                        $this->statusRequest['sent']
                     )
                 );
-                $result = $sth->fetch(PDO::FETCH_OBJ);
                 if ($result) {
-                    $sql = "SELECT request FROM $this->tableFriend WHERE id_user = ? AND id_friend = ?";
-                    $sth = $this->db->prepare($sql);
                     $sth->execute(
                         array(
+                            $data['id_friend'],
+                            $this->statusRequest['sent'],
                             $data['id_user'],
-                            $data['id_friend']
+                            $this->statusRequest['waiting']
                         )
                     );
-                    $result = $sth->fetch(PDO::FETCH_OBJ);
-                    if ($result) {
-                        if ($result->request == $this->statusRequest['waiting']) {
-                            $sql = "DELETE FROM $this->tableFriend WHERE id_user = ? AND id_friend = ?";
-                            $sth = $this->db->prepare($sql);
-                            $sth->execute(
-                                array(
-                                    $data['id_user'],
-                                    $data['id_friend']
-                                )
-                            );
-                            $this->response->setResponse(false, 'Solicitud rechazada');
-                        } else {
-                            $this->response->setResponse(false, 'No se pudo rechazar la solicitud');
-                        }
-                    } else {
-                        $this->response->setResponse(false, 'Esta solicitud de amistad no existe');
-                    }
+                    $this->response->setResponse(true, $this->codeErrors['rejectRequest']['RR001']);
                 } else {
-                    $this->response->setResponse(false, 'Uno de los usuarios no existe');
+                    $this->response->setResponse(false, $this->codeErrors['rejectRequest']['RR002']);
                 }
             }
         } catch (Exception $e) {
@@ -135,16 +128,28 @@ class FriendModel {
 
     public function getAllRequest($id_user) {
         try {
-            $sql = "SELECT * FROM $this->tableFriend WHERE id_user = ? AND request = ?";
+            $sql = "SELECT * FROM user WHERE id_user = ?";
             $sth = $this->db->prepare($sql);
             $result = $sth->execute(
-                array(
-                    $id_user,
-                    $this->statusRequest['waiting']
-                )
+                array($id_user)
             );
-            if ($result) {
-                $this->response->setResponse(true, $sth->fetchAll());
+            $result = $sth->fetch(PDO::FETCH_OBJ);
+            if (isset($result->id_user)) {
+                $sql = "SELECT * FROM $this->tableFriend WHERE id_user = ?";
+                $sth = $this->db->prepare($sql);
+                $result = $sth->execute(
+                    array($id_user)
+                );
+                $arrayResult = $sth->fetchAll();
+                if ($result) {
+                    if (count($arrayResult) != 0) {
+                        $this->response->setResponse(true, $arrayResult);
+                    } else {
+                        $this->response->setResponse(false, $this->codeErrors['getAllRequest']['GR001']);
+                    }
+                }
+            } else {
+                $this->response->setResponse(false, $this->codeErrors['getAllRequest']['GR002']);
             }
         } catch (Exception $e) {
             $this->response->setResponse(false, $e->getMessage());
@@ -154,33 +159,39 @@ class FriendModel {
 
     /**
      * parameters {
-     *      id_user: int
-     *      id_friend: int
+     *      id_user: int        el que acepta
+     *      id_friend: int      el aceptado
      * }
      */
     public function acceptFriend($data) {
         try {
             if (isset($data['id_user'], $data['id_friend']) && $data['id_user'] != '' && $data['id_friend'] != '') {
-                $sql = "SELECT * FROM $this->tableFriend WHERE id_user = ? AND id_friend = ?";
+                $sql = "UPDATE $this->tableFriend SET request_user = ?, request_friend = ? WHERE id_user = ? AND request_user = ? AND id_friend = ? AND request_friend = ?";
                 $sth = $this->db->prepare($sql);
-                $sth->execute(
+                $result = $sth->execute(
                     array(
+                        $this->statusRequest['accepted'],
+                        $this->statusRequest['accepted'],
                         $data['id_user'],
-                        $data['id_friend']
+                        $this->statusRequest['waiting'],
+                        $data['id_friend'],
+                        $this->statusRequest['sent']
                     )
                 );
-                $result = $sth->fetch(PDO::FETCH_OBJ);
-                if ($result->request == $this->statusRequest['waiting']) {
-                    $sql = "UPDATE $this->tableFriend SET request = ? WHERE id_user = ? AND id_friend = ?";
-                    $sth = $this->db->prepare($sql);
+                if ($result) {
                     $sth->execute(
                         array(
                             $this->statusRequest['accepted'],
+                            $this->statusRequest['accepted'],
+                            $data['id_friend'],
+                            $this->statusRequest['sent'],
                             $data['id_user'],
-                            $data['id_friend']
+                            $this->statusRequest['waiting']
                         )
                     );
-                    $this->response->setResponse(true, 'Solicitud aceptada');
+                    $this->response->setResponse(true, $this->codeErrors['acceptFriend']['AF001']);
+                } else {
+                    $this->response->setResponse(false, $this->codeErrors['acceptFriend']['AF002']);
                 }
             }
         } catch (Exception $e) {
@@ -191,13 +202,38 @@ class FriendModel {
 
     /**
      * parameters {
-     *      id_user: int
-     *      id_friend: int
+     *      id_user: int        el que elimina
+     *      id_friend: int      el eliminado, como ella a ti :,v  https://www.youtube.com/watch?v=Bk3lknaWI9Q
      * }
      */
     public function removeFriend($data) {
         try {
-
+            if (isset($data['id_user'], $data['id_friend']) && $data['id_user'] != '' && $data['id_friend'] != '') {
+                $sql = "DELETE FROM $this->tableFriend WHERE id_user = ? AND request_user = ? AND id_friend = ? AND request_friend = ?";
+                $sth = $this->db->prepare($sql);
+                $result = $sth->execute(
+                    array(
+                        $data['id_user'],
+                        $this->statusRequest['accepted'],
+                        $data['id_friend'],
+                        $this->statusRequest['accepted']
+                    )
+                );
+                
+                if ($result) {
+                    $sth->execute(
+                        array(
+                            $data['id_friend'],
+                            $this->statusRequest['accepted'],
+                            $data['id_user'],
+                            $this->statusRequest['accepted']
+                        )
+                    );
+                    $this->response->setResponse(true, $this->codeErrors['removeFriend']['RM001']);
+                } else {
+                    $this->response->setResponse(false, $this->codeErrors['removeFriend']['RM002']);
+                }
+            }
         } catch (Exception $e) {
             $this->response->setResponse(false, $e->getMessage());
         }
